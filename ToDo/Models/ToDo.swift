@@ -14,8 +14,8 @@ var name: String
     
     static var sampleData: [ToDo] {
         [
-            ToDo(name: "Get lube", completed: false),
-            ToDo(name: "Get toys", completed: true)
+            ToDo(name: "Get more bourbon", completed: false),
+            ToDo(name: "Get more whiskey", completed: true)
         ]
     }
 }
