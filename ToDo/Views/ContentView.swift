@@ -45,6 +45,16 @@ struct ContentView: View {
 //            modalType
 //        } same as bellow only shorter to write bellow
         .sheet(item: $modalType) { $0 }
+        
+        .alert("An Error has occurred.", isPresented: $datastore.didError, presenting: datastore.appError) { appError in
+            Button("Continue") {  }
+        } message: { appError in
+            Text(appError.error.localizedDescription)
+        }
+//        the below alert is deprecated an will be removed in the future, the above is the replacement.
+//        .alert(item: $datastore.appError) { appError in
+//            Alert(title: Text("An Error has occurred"), message: Text(appError.error.localizedDescription))
+//        }
     }
 }
 

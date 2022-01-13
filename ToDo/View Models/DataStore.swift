@@ -10,7 +10,8 @@ import SwiftUI
 
 class DataStore: ObservableObject {
     @Published var toDos: [ToDo] = []
-    
+    @Published var appError: ErrorType? = nil
+    @Published var didError = false
     init() {
         print(FileManager.docDirURL.path)
         if FileManager().docExist(named: fileName) {
@@ -42,27 +43,34 @@ class DataStore: ObservableObject {
                 do {
                     toDos = try decoder.decode([ToDo].self, from: data)
                 } catch {
-                    print(error.localizedDescription)
+                    print(ToDoError.decodingError.localizedDescription)
+                    appError = ErrorType(error: .decodingError)
+                    didError = true
                 }
             case .failure(let error):
-                print(error.localizedDescription)
+                //print(error.localizedDescription)
+                appError = ErrorType(error: error)
+                didError = true
             }
         }
     }
     
     func saveTodos() {
-        print("Saving toDos to file system")
         let encoder = JSONEncoder()
         do {
             let data = try encoder.encode(toDos)
             let jsonString = String(decoding: data, as: UTF8.self)
             FileManager().saveDocument(contents: jsonString, docName: fileName) { (error) in
                 if let error = error {
-                    print(error.localizedDescription)
+                    //print(error.localizedDescription)
+                    appError = ErrorType(error: error)
+                    didError = true
                 }
             }
         } catch {
-            print(error.localizedDescription)
+            //print(ToDoError.encodingError.localizedDescription)
+            appError = ErrorType(error: .encodingError)
+            didError = true
         }
     }
 }
